@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERS - Expense Reimbursement System</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Expense Reimbursement System</h1>
+    </header>
+
+    <main id="app">
+        <!-- Login / Register (unauthenticated) -->
+        <section id="auth-section">
+            <div id="auth-tabs">
+                <button class="tab active" data-tab="login">Login</button>
+                <button class="tab" data-tab="register">Register</button>
+            </div>
+
+            <!-- Login form -->
+            <form id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required autocomplete="current-password">
+                </div>
+                <div class="form-error" id="login-error"></div>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+
+            <!-- Register form -->
+            <form id="register-form" class="auth-form hidden">
+                <h2>Register</h2>
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" required autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="reg-firstname">First Name</label>
+                    <input type="text" id="reg-firstname" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-lastname">Last Name</label>
+                    <input type="text" id="reg-lastname" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-department">Department</label>
+                    <select id="reg-department" required></select>
+                </div>
+                <div class="form-error" id="register-error"></div>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+        </section>
+
+        <!-- Main dashboard (authenticated) -->
+        <section id="dashboard-section" class="hidden">
+            <div id="user-bar">
+                <span id="user-info"></span>
+                <button id="logout-btn" class="btn-secondary">Logout</button>
+            </div>
+
+            <!-- Submit new reimbursement -->
+            <section id="submit-section">
+                <h2>Submit Reimbursement</h2>
+                <form id="reimb-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reimb-amount">Amount ($)</label>
+                            <input type="number" id="reimb-amount" step="0.01" min="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reimb-type">Type</label>
+                            <select id="reimb-type" required>
+                                <option value="">-- Select --</option>
+                                <option value="TRAVEL">Travel</option>
+                                <option value="FOOD">Food</option>
+                                <option value="LODGING">Lodging</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reimb-desc">Description</label>
+                        <textarea id="reimb-desc" rows="2" required></textarea>
+                    </div>
+                    <div class="form-error" id="submit-error"></div>
+                    <div class="form-success" id="submit-success"></div>
+                    <button type="submit" class="btn-primary">Submit</button>
+                </form>
+            </section>
+
+            <!-- Reimbursement list -->
+            <section id="list-section">
+                <h2>Reimbursements</h2>
+                <div id="filter-bar">
+                    <select id="filter-status">
+                        <option value="">All Statuses</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="DENIED">Denied</option>
+                    </select>
+                    <select id="filter-department" class="hidden">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+                <div id="reimb-table-container">
+                    <table id="reimb-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Author</th>
+                                <th>Submitted</th>
+                                <th>Resolved</th>
+                                <th>Resolver</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reimb-tbody"></tbody>
+                    </table>
+                    <div id="no-reimbs" class="empty-state hidden">No reimbursements found.</div>
+                </div>
+            </section>
+
+            <!-- Edit modal -->
+            <dialog id="edit-modal">
+                <h3>Edit Reimbursement</h3>
+                <form id="edit-form">
+                    <input type="hidden" id="edit-id">
+                    <div class="form-group">
+                        <label for="edit-amount">Amount ($)</label>
+                        <input type="number" id="edit-amount" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-type">Type</label>
+                        <select id="edit-type" required>
+                            <option value="TRAVEL">Travel</option>
+                            <option value="FOOD">Food</option>
+                            <option value="LODGING">Lodging</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-desc">Description</label>
+                        <textarea id="edit-desc" rows="2" required></textarea>
+                    </div>
+                    <div class="form-error" id="edit-error"></div>
+                    <div class="modal-buttons">
+                        <button type="submit" class="btn-primary">Save</button>
+                        <button type="button" class="btn-secondary" id="edit-cancel">Cancel</button>
+                    </div>
+                </form>
+            </dialog>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+</html>

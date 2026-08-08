@@ -1,0 +1,33 @@
+# Maven build output
+target/
+
+# H2 database files (local persistence data)
+data/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Java compiled classes
+*.class
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+/tmp/
+
+# Environment
+.env
+.env.local
